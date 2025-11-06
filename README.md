@@ -1,186 +1,261 @@
-# Wordle Solver - Information Theory Approach 🎯
+# 🎯 Wordle Solver - Information Theory Approach
 
-A Python implementation inspired by NYT WordleBot that uses information theory to optimally solve Wordle and analyze your gameplay!
+An optimal Wordle solver using **information theory** (entropy maximization), inspired by the NYT WordleBot. This isn't just a solver - it's a complete analysis and learning tool!
 
-## Quick Start
+![Python](https://img.shields.io/badge/python-3.7+-blue.svg)
+![License](https://img.shields.io/badge/license-MIT-green.svg)
+
+## ✨ Features
+
+- 🧮 **Information Theory Based** - Uses entropy to maximize information gain
+- 🎮 **Live Game Helper** - Use while playing actual Wordle!
+- 📊 **Game Analyzer** - Analyze your games like NYT WordleBot
+- 🎯 **Skill Ratings** - Get 0-99 skill scores for each guess
+- 💡 **Smart Suggestions** - See better alternatives and optimal strategies
+- 🎲 **Multiple Modes** - Random testing, batch analysis, interactive play
+- 📚 **Educational** - Learn information theory through gameplay!
+
+## 🚀 Quick Start
+
+### 1. Clone the Repository
 
 ```bash
-python demo.py
+git clone https://github.com/YOUR_USERNAME/wordle-solver.git
+cd wordle-solver
 ```
 
-## What You've Built
+### 2. Download Word List
 
-### Core Files
-
-1. **`wordle_solver.py`** - The brain of the operation
-   - `WordlePattern`: Generates feedback patterns (🟩🟨⬜)
-   - `WordleConstraints`: Tracks what we know about the answer
-   - `WordleSolver`: Uses entropy to find optimal guesses
-
-2. **`wordle_analyzer.py`** - Like NYT WordleBot
-   - Analyzes your guesses
-   - Gives skill ratings (0-99)
-   - Suggests better alternatives
-   - Calculates luck score
-
-3. **`demo.py`** - See it in action
-
-## The Information Theory Magic ✨
-
-### What is Entropy?
-
-**Entropy = Measure of Uncertainty**
-
-```python
-# If you have 8 equally likely candidates:
-entropy = log₂(8) = 3 bits
-
-# After a good guess, you might have 2 candidates left:
-new_entropy = log₂(2) = 1 bit
-
-# Information gained = 3 - 1 = 2 bits!
+```bash
+curl -o wordle_answers.txt https://gist.githubusercontent.com/cfreshman/a03ef2cba789d8cf00c08f767e0fad7b/raw/wordle-answers-alphabetical.txt
 ```
 
-### How the Solver Works
+### 3. Run
+
+```bash
+python main.py
+```
+
+## 📖 Usage
+
+### Main Menu
 
 ```
-For each possible guess:
-  1. Simulate it against all remaining candidates
-  2. See what patterns it produces
-  3. Count how many words remain for each pattern
-  4. Calculate entropy: -Σ(p * log₂(p))
-  5. Pick the guess with HIGHEST entropy!
+1. Random Solve - Pick random word and solve optimally
+2. Batch Test - Test solver on multiple random words
+3. Solve Specific - Choose a word to solve
+4. Analyze Your Game - Get skill ratings and suggestions
+5. Interactive Play - Play with solver assistance
+6. Live Wordle Helper - Use while playing actual Wordle! 🎮
+7. Exit
 ```
+
+### Mode 6: Live Wordle Helper (Most Useful!)
+
+Use this while playing actual Wordle:
+
+```bash
+python main.py
+# Choose option 6
+```
+
+**How it works:**
+1. Get AI suggestion (e.g., RAISE)
+2. Enter that word in Wordle
+3. Type the colors: `G` for 🟩, `Y` for 🟨, `_` for ⬜
+4. Get next optimal suggestion
+5. Repeat until solved!
 
 **Example:**
-- 100 candidates remain
-- Guess A might split them: [50, 30, 20] 
-- Guess B might split them: [25, 25, 25, 25]
-- Guess B has higher entropy → better guess!
+```
+💡 Suggested word: RAISE
 
-### Why This Works
+What word did you guess? raise
+What colors did you get? __y_g
+✓ Got it: RAISE ⬜⬜🟨⬜🟩
 
-The key insight: **Even splits give maximum information**
+Words remaining: 34
+💡 Next suggestion: GLIDE
+```
 
-- Worst case: [99, 1] → You learn almost nothing
-- Best case: [50, 50] or [25, 25, 25, 25] → Maximum info
+## 🧠 How It Works
 
-This is the same math behind:
+### Information Theory
+
+The solver uses **entropy** to measure information gain:
+
+```
+H = -Σ(p * log₂(p))
+```
+
+For each possible guess:
+1. Simulate it against all remaining candidates
+2. Calculate what patterns would result
+3. Compute entropy (higher = more information)
+4. Pick the guess with maximum entropy
+
+### Why This Matters
+
+- **First guess (~5.9 bits):** Narrows 2,315 words → ~50 words
+- **Second guess (~3.5 bits):** Narrows 50 words → ~5 words  
+- **Third guess (~2.0 bits):** Narrows 5 words → ~1 word
+
+This is the **same algorithm** used by NYT WordleBot!
+
+## 📊 Example Output
+
+```
+Guess 1: ARISE ⬜⬜⬜🟩🟩
+  Skill: 99/99 (Excellent!)
+  Information gained: 5.88 bits
+  Words remaining: 2315 → 9
+
+Guess 2: TOUCH ⬜🟩🟩⬜🟨
+  Information gained: 3.17 bits
+  Words remaining: 9 → 1
+
+Guess 3: HOUSE 🟩🟩🟩🟩🟩
+  ✓ Solved in 3 guesses!
+
+OVERALL PERFORMANCE
+Solved in: 3 guesses
+Average skill: 96/99 (Masterful!)
+```
+
+## 📁 Project Structure
+
+```
+wordle-solver/
+├── main.py              # Interactive interface with 7 modes
+├── solver.py            # Core information theory solver
+├── analyser.py          # Game analyzer (WordleBot-style)
+├── wordle_answers.txt   # Word list (download separately)
+├── .gitignore
+└── README.md
+```
+
+## 🎓 What You'll Learn
+
+This project teaches real computer science concepts:
+
+- **Information Theory** - Entropy, information gain, optimal decisions
+- **Search Algorithms** - How to explore solution spaces efficiently
+- **Probability** - Expected values, distributions
+- **Optimization** - Finding optimal strategies
+
+The same principles power:
 - Binary search algorithms
-- 20 Questions game  
-- Decision trees in ML
-- Data compression
+- Machine learning decision trees
+- Data compression (Huffman coding)
+- AI reasoning systems
 
-## Example Output
+## 🔬 Advanced Features
 
-```
-Guess 1: SLATE 🟨⬜⬜⬜🟩
-  Skill: 95/99 (Excellent!)
-  Information gained: 5.82 bits
-  Words remaining: 2309 → 34
-
-Guess 2: HORSE ⬜🟩⬜🟨🟩
-  Skill: 88/99 (Great)
-  Information gained: 3.21 bits
-  Words remaining: 34 → 4
-
-OVERALL: Solved in 3 guesses
-Average skill: 92/99 (Expert)
-```
-
-## Usage
-
-### Solve a Word
+### Analyze Your Games
 
 ```python
-from wordle_solver import WordleSolver
-
-words = ['SLATE', 'HOUSE', 'MOUSE', ...]
-solver = WordleSolver(words, words)
-solver.solve('MOUSE', verbose=True)
-```
-
-### Analyze Your Game
-
-```python
-from wordle_analyzer import WordleAnalyzer
+from analyser import WordleAnalyzer
 
 analyzer = WordleAnalyzer(words, words)
-your_guesses = ['STARE', 'HOUSE', 'MOUSE']
-analyzer.analyze_game('MOUSE', your_guesses)
-analyzer.compare_strategies('MOUSE', your_guesses)
+analyzer.analyze_game('HOUSE', ['STARE', 'CLONE', 'HOUSE'])
 ```
 
-## Key Concepts
+Output:
+```
+Guess 1: STARE - Skill: 88/99 (Great)
+  💡 Optimal: SLATE (5.88 bits)
+  
+Guess 2: CLONE - Skill: 82/99 (Great)
+  💡 Better alternatives: CHILD, WHILE
 
-### Skill Rating (0-99)
-Compares your guess's entropy to the optimal guess:
-- 90-99: Excellent!
-- 70-89: Great
-- 50-69: Good  
-- 30-49: OK
-- 0-29: Needs work
-
-### Luck Score (0-99)
-Did you eliminate more/fewer words than expected?
-- 75+: Very lucky!
-- 60-74: Lucky
-- 40-59: Average
-- 0-39: Unlucky
-
-### Information Gained (bits)
-- First guess: ~5 bits (narrows 2000+ words to ~50)
-- Middle guesses: ~3 bits  
-- Final guesses: ~1-2 bits
-
-## Getting Word Lists
-
-You need:
-1. **Answers** (~2300 words): Possible Wordle solutions
-2. **Valid guesses** (~12000 words): All accepted words
-
-Find these online or from the Wordle source code. For now, the demo uses a small list.
-
-## Advanced Features
-
-### Hard Mode
-Only guess from remaining candidates:
-```python
-solver.get_best_guess(use_hard_mode=True)
+Average skill: 85/99 (Expert)
+Luck score: 55/99 (Average)
 ```
 
-### Custom Metrics
-Instead of entropy, minimize expected remaining:
+### Batch Testing
+
 ```python
+from solver import WordleSolver
+
+solver = WordleSolver(words, words)
+
+for word in test_words:
+    solver.reset()
+    guesses = solver.solve(word, verbose=False)
+    print(f"{word}: {len(guesses)} guesses")
+```
+
+### Custom Strategies
+
+Modify scoring in `solver.py`:
+
+```python
+# Use expected remaining instead of entropy
 score = solver.calculate_expected_remaining(guess, candidates)
 ```
 
-## Why Information Theory?
+## 📝 Configuration
 
-This isn't just a Wordle solver - it's a window into how:
-- Search algorithms work (binary search)
-- Machine learning makes decisions (decision trees)
-- Data gets compressed (Huffman coding)
-- AI systems reason under uncertainty
+At the top of `main.py`:
 
-**Learning Wordle = Learning Computer Science fundamentals!**
+```python
+# Toggle between interactive menu and auto-testing
+AUTO_RANDOM_MODE = False
 
-## Next Steps
+# If True, configure random testing:
+NUM_RANDOM_TESTS = 10
+SHOW_DETAILED_SOLVE = True
+```
 
-Ideas to extend this:
-- Add visualization of the decision tree
-- Implement different solving strategies
-- Add multiplayer analysis (comparing players)
-- Create a web interface
-- Analyze Wordle statistics over time
-- Add support for Wordle variants (6-letter, etc.)
+## 🎮 Tips
 
-## Resources
+### Best Starting Words
+- **RAISE** - 5.879 bits (optimal for this list)
+- **ARISE** - 5.879 bits  
+- **SLATE** - 5.878 bits (WordleBot's choice)
+- **STARE** - 5.876 bits
 
-- **NYT WordleBot**: https://www.nytimes.com/games/wordle/index.html
-- **Information Theory**: Claude Shannon's papers
-- **Entropy in games**: 3Blue1Brown videos on YouTube
+All within 0.01 bits - essentially tied!
+
+### Playing Strategy
+1. Use the Live Helper (Mode 6) while playing
+2. Trust the suggestions - they're mathematically optimal
+3. Learn from the skill ratings
+4. Watch how remaining words decrease
+
+### Understanding Skill Ratings
+- **90-99:** Optimal or near-optimal guess
+- **70-89:** Very good choice
+- **50-69:** Reasonable guess
+- **Below 50:** Could be improved
+
+## 🤝 Contributing
+
+Feel free to:
+- Add new analysis features
+- Implement different strategies
+- Add visualizations
+- Support Wordle variants
+
+## 📄 License
+
+MIT License - feel free to use and modify!
+
+## 🙏 Acknowledgments
+
+- Inspired by the NYT WordleBot
+- Based on information theory principles by Claude Shannon
+- Word lists from the official Wordle game
+
+## 📚 Further Reading
+
+- [Information Theory](https://en.wikipedia.org/wiki/Information_theory)
+- [Entropy in Game Theory](https://en.wikipedia.org/wiki/Entropy_(information_theory))
+- [NYT WordleBot](https://www.nytimes.com/games/wordle/index.html)
+- [3Blue1Brown - Solving Wordle using information theory](https://www.youtube.com/watch?v=v68zYyaEmEA)
 
 ---
 
-Built to learn information theory through Wordle! 🎓🎮
+**Learn information theory while improving your Wordle game!** 🎓🎮
+
+Made with ❤️ and lots of entropy calculations
